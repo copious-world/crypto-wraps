@@ -1,0 +1,34 @@
+{
+  "name": "crypto-wraps",
+  "version": "0.1.0",
+  "description": "Methods for convenience. Methods that wrap paticular use cases of crypto.subtle.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "ava ./test/index.js"
+  },
+  "devDependencies": {
+    "ava": "^3.15.0",
+    "nyc": "^15.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/copious-world/crypto-wraps.git"
+  },
+  "keywords": [
+    "crypto",
+    "crypto.subtle",
+    "aes",
+    "wrapper",
+    "sign",
+    "verify"
+  ],
+  "author": "Richard Leddy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/copious-world/crypto-wraps/issues"
+  },
+  "homepage": "https://github.com/copious-world/crypto-wraps#readme"
+}
