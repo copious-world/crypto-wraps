@@ -20,7 +20,7 @@ export function buffer_from_b64_csv(b64_number_els) {
 	let numbers = atob(b64_number_els)
 	return buffer_from_cvs_array(numbers)
 }
-
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 
 
 async function do_hash_buffer(text) {
@@ -41,7 +41,6 @@ export function from_hash(base64text) {
     return bytes
 }
 
-
 export function to_base64(text) {
     return base64.base64encode(text)
 }
@@ -52,6 +51,17 @@ export function from_base64(base64text) {
 }
 
 
+
+export function from_base64_to_uint8array(base64text) {
+    while ( base64text.length %4 ) base64text += '='
+    return base64.base64ToBytes(base64text)
+}
+
+export function to_base64_from_uint8array(a_uint8Array) {
+    let b = base64.bytesToBase64(a_uint8Array)
+    b = b.replace(/\=/g,'')
+    return b
+}
 
 
 // ----------------------------  allow certain methods to be global (up to the application to call)

@@ -28,8 +28,8 @@ test('crypto-hash', t => {
 
 test('crypto-wrap', async t => {
     let nonce = cwraps.gen_nonce()
-    let key = await cwraps.gen_cipher_key()
 
+    let key = await cwraps.gen_cipher_key()
 
     t.is(key.type,'secret')
     t.true(key.extractable)

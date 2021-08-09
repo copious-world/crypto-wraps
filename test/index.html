@@ -1,0 +1,844 @@
+<!doctype html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="author" content="Richard Leddy" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	<meta id="theme-color" name="theme-color" content="#452770">
+
+	<link rel="canonical" href="http://www.copious.world">
+
+	<title>Copious World - profile mail</title>
+	<meta name="description" content="An entry point into the our world of AI, IoT, and Communities built around songs, etc.">
+
+<style>
+	/*csslint important:false*/
+
+	/* ==========================================================================
+	Pure Base Extras
+	========================================================================== */
+
+	/**
+	* Extra rules that Pure adds on top of Normalize.css
+
+	html {
+
+	}
+	*/
+
+	body {
+			height: 100%;
+		}
+
+	/**
+	* Always hide an element when it has the `hidden` HTML attribute.
+	*/
+
+	.hidden,
+	[hidden] {
+		display: none !important;
+	}
+
+	/**
+	* Add this class to an image to make it fit within it's fluid parent wrapper while maintaining
+	* aspect ratio.
+	*/
+	.pure-img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.items {
+		display: flex;
+		flex-wrap: wrap;
+		margin-left: -10px;
+		margin-top: -10px;
+	}
+
+	.items .item {
+		flex: 1 0 300px;
+		box-sizing: border-box;
+		background: -webkit-linear-gradient(to right, rgba(242, 242, 210, 0.3), white));
+		background: linear-gradient(to right, rgba(242, 242, 210, 0.3), white );
+		color: #171e42;
+		padding: 10px;
+		margin-left: 10px;
+		margin-top: 0px;
+	}
+
+	.items .extra-i {
+		padding-left: 10%;
+		padding-bottom: 4px;
+		padding-right: 12px;
+		font-size: 110%;
+		font-family: sans-serif;
+	}
+
+	.middleBanner {
+		text-align: 'center';
+		padding-left: 10%;
+		padding-right: 10%;
+		font-weight:bold;
+		color: darkgreen;
+		padding-top:4%;
+		overflow:auto;
+	}
+
+	.applink {
+		padding:3px;
+		background-color: cornsilk;
+		width:inherit;
+		min-height: 100%;
+		color:darkolivegreen;
+		font-weight: bolder;
+
+	}
+
+	.extraBanner {
+		text-align: 'center';
+		padding-left: 10%;
+		padding-right: 10%;
+		font-weight:bold;
+		color: #FF4400;
+		padding-top:4%;
+	}
+
+
+	.fillLowerWrap {
+		width: 66%;
+		margin-left:0px;
+		margin-right:0px;
+		padding: 8px;
+		margin-top:8px;
+		background: -webkit-linear-gradient(to right, white, #FAFAFF);
+		background: linear-gradient(to right, white, #FAFAFF );
+		margin-left: 10px;
+	}
+
+	.fitMenuLower {
+		width: 95%;
+		height: 50%;
+		margin-left:0px;
+		margin-right:0px;
+		padding: 8px;
+		margin-top:8px;
+		background: -webkit-linear-gradient(to right, white, #FAFAFF);
+		background: linear-gradient(to right, white, #FAFAFF );
+		margin-left: 10px;
+	}
+
+	#squashMenu:hover {
+		border: 1px solid rgb(230,230,240,0.4);
+		padding-top:4px;
+		background-color: #EFEFEF;
+	}
+
+	#squashMenuContainer {
+		position:absolute;
+		visibility:hidden;
+		top : 0; left : 0;
+		height:100%;
+		width: 55%;
+		z-index:100;
+		border: rgba(252, 190, 190, 0.4) 2px solid;
+		background-color: white;
+	}
+
+	.fade_able {
+		position:absolute;
+		visibility:hidden;
+		top : 10px; left : 10px;
+		height:80%;
+		width: 40%;
+		z-index:101;
+		border: rgba(252, 190, 190, 0.4) 2px solid;
+		background-color: white;
+		overflow:hidden;
+	}
+
+	.solid_able {
+		position:absolute;
+		visibility:hidden;
+		top : 10px; left : 10px;
+		height:80%;
+		width: 40%;
+		z-index:111;
+		border: rgba(252, 190, 190, 0.4) 2px solid;
+		background-color: white;
+		overflow: hidden;
+	}
+
+	@media screen and (max-width: 950px) {
+		.solid_able {
+			width: 90%;
+		}
+	}
+
+	#thankyou_box {
+		position:absolute;
+		visibility:hidden;
+		top : 25%; left : 25%;
+		height:50%;
+		width: 50%;
+		z-index:150;
+		border: rgba(100, 5, 5, 0.6) 2px solid;
+		background-color: lightgoldenrodyellow;
+		overflow: auto;
+	}
+
+	@media screen and (max-width: 1040px) {
+		.fade_able {
+			width: 60%;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		.fade_able {
+			width: 90%;
+		}
+	}
+
+	.fade_able_content {
+		height:100%;
+		width: 100%;
+		overflow:auto;
+	}
+
+	.togglebar {
+		height:20px;
+		visibility:inherit;
+		background-color: navy;
+		text-align:right;
+	}
+
+	.closer_x {
+		padding:2px;
+		color:purple;
+		font-weight:bolder;
+		border: solid 1px red;
+		cursor:pointer;
+	}
+
+	@media (max-width: 1225px) {
+		.fillLowerWrap {
+			visibility : "none";
+			height : 0px;
+		}
+	}
+
+
+	.fillLower {
+		border: darkred 2px solid;
+		height: 96%;
+		width: 96%;
+		margin-left: 10px;
+		padding:8px;
+		background: -webkit-linear-gradient(to right, rgba(252, 252, 240, 0.4), #FEFEFE);
+		background: linear-gradient(to right, rgba(252, 252, 240, 0.4), #FEFEFE );
+	}
+
+	button {
+		cursor: pointer;
+		font-size: 101%;
+		font-weight: bold;
+		color: darkblue;
+		margin: 2px;
+		width:120px;
+	}
+
+	button:hover {
+		background-color : #CACAFF;
+		color: darkred;
+	}
+
+	@media screen and (max-width: 390px) {
+		.items .extra-i {
+			padding-left: 1%;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		.items .extra-i {
+			padding-left: 3%;
+		}
+	}
+
+	.longviz {
+		visibility : "visibile";
+		height: 10px;
+		background-color:inherit;
+	}
+
+	@media (max-width: 1040px) {
+		.longviz {
+			visibility : "none";
+			height : 0px;
+		}
+	}
+
+	.shortviz {
+		visibility : "none";
+		height:0px;
+		margin-top:6px;
+	}
+
+	@media (max-width: 620px) {
+		.shortviz {
+			visibility : "visible";
+			height:2px;
+			background-color:darkgreen;
+			margin-bottom:12px;
+		}
+	}
+
+	@media (min-width: 1040px) {
+		.shortviz {
+			visibility : "visible";
+			height:120px;
+			border: 2px darkblue solid;
+			background-color:#FFFFF6;
+			margin-bottom:30px;
+			margin-top:5px;
+		}
+	}
+
+	@media (min-width: 380px) {
+		.items .item {
+			max-width: calc(100% - 20px);
+		}
+		.items .extra-i {
+			padding-left: 3%;
+		}
+	}
+	@media (min-width: 410px) {
+		.items .item {
+			max-width: calc(100% - 10px);
+		}
+	}
+	@media (min-width: 620px) {
+		.items .item {
+			max-width: calc(50% - 10px);
+		}
+	}
+	@media (min-width: 830px) {
+		.items .item {
+			max-width: calc(50% - 10px);
+		}
+	}
+	@media (min-width: 1040px) {
+		.items .item {
+			max-width: calc(33.33333% - 10px);
+		}
+	}
+	@media (min-width: 1250px) {
+		.items .item {
+			max-width: calc(25%- 10px);
+		}
+	}
+	@media (min-width: 1460px) {
+		.items .item {
+			max-width: calc(20% - 10px);
+		}
+	}
+	@media (min-width: 1670px) {
+		.items .item {
+			min-width: calc(16.66667% - 10px);
+		}
+	}
+
+
+	body {
+		border: 1px solid black;
+		
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+
+	@media screen and (orientation: portrait) {
+		#mainNav {
+			width: 100%;
+		}
+	}
+
+	@media screen and (orientation: landscape) {
+		#mainNav {
+			width: 100%;
+		}
+	}
+
+	main {
+		border-left: solid 3px navy;
+		border-top: solid 1px #8833BB;
+		padding : 4px;
+	}
+
+	#mainNav {
+		font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		font-weight: 700;
+		text-transform: uppercase;
+		background: blue;
+		border-left: solid 3px navy;
+		border-top: solid 3px navy;
+		border-bottom: solid 3px rgba(252,252,255,0.7);
+		min-height: 90px
+		padding: 20px
+		background: -webkit-linear-gradient(to left, rgba(242, 242, 210, 0.3), white);
+		background: linear-gradient(to left, rgba(242, 242, 210, 0.3), white );
+		
+	}
+
+	#mainNav table {
+		padding-left: 3%;
+	}
+
+
+	#mainNav  table  a:focus { outline: none; }
+	#mainNav  table  .navbar-brand {
+		font-size: 1.1rem;
+		color: white;
+	}
+
+	#mainNav  table  .navbar-brand.active, #mainNav .navbar-brand:active, #mainNav .navbar-brand:focus, #mainNav .navbar-brand:hover {
+		color: white;
+	}
+
+	#mainNav  table  .navbar-nav {
+		letter-spacing: 1px; }
+
+	#mainNav  table  .navbar-nav li.nav-item {
+		display:inline;
+	}
+
+	
+	
+	#mainNav  table  .navbar-nav li.nav-item a.nav-link {
+		color: darkgreen;
+		text-decoration: none;
+		vertical-align: top;
+		padding-right: 10px;
+	}
+
+	#mainNav  table  .navbar-nav li.nav-item a.nav-link:hover {
+		color: #18BC9C;
+		outline: none;
+		
+	}
+
+
+	#mainNav  table  .navbar-nav a.nav-text {
+		background-color : rgba(242,222,255,0.6);
+		border-radius: 25px;
+		margin-bottom: 9px;
+		margin-right: 6px;
+		white-space: nowrap;
+	}
+
+
+	#mainNav  table  .navbar-nav li.nav-item a.nav-link:active, #mainNav .navbar-nav li.nav-item a.nav-link:focus { color: white; }
+	
+	.footer-list li {
+		list-style-type: none;
+	}
+
+	.footer-list li a:hover { color: gold; }
+	
+	.hover_group {
+		cursor:pointer;
+	}
+
+	.hover_group rect {
+		fill:#e6e6e6;
+	}
+
+	.hover_group:hover rect {
+		fill: #F6F6e6;
+	}
+
+	footer {
+		padding:10px;
+		background: -webkit-linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2 );
+		background: linear-gradient(to left, rgba(252,252,255,0.5), #fffbe2  );
+		text-align: center;
+		font-size: 0.85em;
+	}
+
+	footer a {
+		text-decoration:none;
+		color:darkgreen;
+		font-weight:bold;
+		font-style: italic;
+	}
+
+	.copiouslink:hover {
+		fill:navy;
+	}
+	.copiouslink {
+		fill:black;
+	}
+
+	* {margin: 0; padding: 0; box-sizing: border-box}
+	
+	.PhIOtjDr_0 {
+		fill:none;
+		stroke:#1c1448;
+		stroke-width:4.59875107;
+		stroke-miterlimit:4;
+		stroke-dasharray: 2948 2950;
+		stroke-dashoffset: 2949;
+		animation: PhIOtjDr_draw 6666ms ease-in forwards;
+	}
+
+	@keyframes PhIOtjDr_draw {
+		100% {stroke-dashoffset: 0}
+	}
+
+	@keyframes PhIOtjDr_fade {
+		0% {stroke-opacity: 1}
+		97.1830985915493% {stroke-opacity: 1}
+		100% {stroke-opacity: 0}
+	}
+
+	.form_el {
+		border:lightgray solid 1px;
+		padding:6px;
+		margin:2px;
+		width:80%;
+	}
+
+	.form_el_inner {
+		border:lightgray solid 1px;
+		padding:6px;
+		margin:2px;
+		width:100%;
+	}
+
+	label {
+		font-weight:bold;
+		color:darkgreen;
+		width:35%;
+	}
+
+	.field_el {
+		width:65%;
+	}
+
+	@media (max-width: 1040px) {
+		.field_el {
+			width:94%;
+			margin-left:3%;
+			margin-right:3%;
+		}
+	}
+
+	#contact_box {
+		background: -webkit-linear-gradient(to right, rgba(252, 252, 240, 1.0), #FEFEFE));
+		background: linear-gradient(to right, rgba(252, 252, 240, 1.0), #FEFEFE );
+	}
+
+	.textarea_field_el {
+		width: 94%;
+		margin:3%;
+	}
+
+	.error-message {
+		visibility:hidden;
+		width:75%;
+		font-weight:bolder;
+		color:red;
+		background-color:white;
+		border: solid 1px orange;
+		padding:2px;
+		margin:3px;
+	}
+
+	/* The Modal (background) */
+	.modal {
+		display: none; /* Hidden by default */
+		position: relative; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		-webkit-animation-name: fadeIn; /* Fade in the background */
+		-webkit-animation-duration: 0.4s;
+		animation-name: fadeIn;
+		animation-duration: 0.4s
+	}
+
+	/* Modal Content */
+	.modal-content {
+		position: inherit;
+		top: 0;
+		background-color: #fefefe;
+		width: 100%;
+		-webkit-animation-name: slideIn;
+		-webkit-animation-duration: 0.4s;
+		animation-name: slideIn;
+		animation-duration: 0.4s
+	}
+
+	/* The Close Button */
+	.close {
+		color: white;
+		float: right;
+		font-size: 18px;
+		font-weight: bold;
+	}
+
+	.close:hover,
+	.close:focus {
+		color: #000;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.modal-header {
+		padding: 2px 16px;
+		background-color: #4ca85c;
+		color: white;
+	}
+
+	.modal-body {padding: 2px 16px;}
+
+	.modal-footer {
+		padding: 2px 16px;
+		margin-bottom: 20px;
+		background-color: darkgreen;
+		color: white;
+	}
+
+	/* Add Animation */
+	@-webkit-keyframes slideIn {
+		from {bottom: -300px; opacity: 0}
+		to {bottom: 0; opacity: 1}
+	}
+
+	@keyframes slideIn {
+		from {bottom: -300px; opacity: 0}
+		to {top: 0; opacity: 1}
+	}
+
+	@-webkit-keyframes fadeIn {
+		from {opacity: 0}
+		to {opacity: 1}
+	}
+
+	@keyframes fadeIn {
+		from {opacity: 0}
+		to {opacity: 1}
+	}
+
+	#logout-control-top {
+		visibility: hidden;
+		display: none;
+	}
+
+	.no-view-file-field {
+		display: none;
+		visibility: hidden;
+	}
+
+</style>
+</head>
+<script type="module">
+    import {make_test,report} from  "./browser-test.js"
+    import * as cwraps from "../client/crypto-wraps.js"
+    import * as hashit from "../client/crypto-hash.js"
+    (async () => {
+        let t = make_test()
+        let el = document.getElementById("testing")
+        let nonce = cwraps.gen_nonce()
+        el.innerHTML = "this is a test::  " + nonce
+
+        //
+        t.true(true)
+        //
+        let b = hashit.buffer_from_cvs_array("1,2,3,4,5")
+        t.is(b[0],1)
+        t.is(b[4],5)
+        t.is(b.length,5)
+        //
+        let b64 = hashit.to_base64("1,2,3,4,5")
+        t.is(b64,"MSwyLDMsNCw1")
+        let numstr = hashit.from_base64("MSwyLDMsNCw1")
+        t.is(numstr,"1,2,3,4,5")
+        //
+        b = hashit.buffer_from_b64_csv("MSwyLDMsNCw1")
+        t.is(b[0],1)
+        t.is(b[4],5)
+        t.is(b.length,5)
+
+        let key = await cwraps.gen_cipher_key()
+
+        t.is(key.type,'secret')
+        t.true(key.extractable)
+        t.is(key.algorithm.name,'AES-CBC')
+        t.is(key.algorithm.length,256)
+        t.is(key.usages[0],'encrypt')
+        t.is(key.usages[1],'decrypt')
+        //
+
+        let encodable = "this is a test 1234"
+        let iv_nonce = hashit.from_base64_to_uint8array(nonce)
+        let text = await cwraps.aes_encryptor(encodable,key,iv_nonce)
+        text = await cwraps.aes_decipher_message(text,key,iv_nonce)
+        t.is(text,encodable)
+
+        let key_pack = await cwraps.galactic_user_starter_keys()
+
+        t.false(key_pack.pk_str === undefined)
+        t.false(key_pack.priv_key === undefined)
+        t.false(key_pack.signer_pk_str === undefined)
+        t.false(key_pack.signer_priv_key === undefined)
+        //
+        t.is(typeof key_pack.pk_str,"string")
+        t.is(typeof key_pack.priv_key,"string")
+        t.is(typeof key_pack.signer_pk_str,"string")
+        t.is(typeof key_pack.signer_priv_key,"string")
+        //
+        try {
+            let pk_str = JSON.parse(key_pack.pk_str)
+            t.is(pk_str.key_ops[0],"wrapKey")
+            t.is(pk_str.ext,true)
+            t.is(pk_str.kty,"RSA")
+            t.is(pk_str.alg,"RSA-OAEP-256")
+        } catch(e) {
+            t.fail("could not parse jwk package")
+        }
+        //
+        try {
+            let priv_key = JSON.parse(key_pack.priv_key)
+            t.is(priv_key.key_ops[0],"unwrapKey")
+            t.is(priv_key.ext,true)
+            t.is(priv_key.kty,"RSA")
+            t.is(priv_key.alg,"RSA-OAEP-256")
+        } catch(e) {
+            t.fail("could not parse jwk package")
+        }
+        //
+        try {
+            let signer_pk_str = JSON.parse(key_pack.signer_pk_str)
+            t.is(signer_pk_str.key_ops[0],"verify")
+            t.is(signer_pk_str.ext,true)
+            t.is(signer_pk_str.kty,"EC")
+            t.is(signer_pk_str.crv,"P-384")
+        } catch(e) {
+            t.fail("could not parse jwk package")
+        }    
+        //
+        try {
+            let signer_priv_key = JSON.parse(key_pack.signer_priv_key)
+            t.is(signer_priv_key.key_ops[0],"sign")
+            t.is(signer_priv_key.ext,true)
+            t.is(signer_priv_key.kty,"EC")
+            t.is(signer_priv_key.crv,"P-384")
+        } catch(e) {
+            t.fail("could not parse jwk package")
+        }
+
+        /// 
+        let string_to_be_signed = "Testing the signer part of a string signer"
+        let storable_key = await cwraps.aes_to_str(key) 
+        let priv_keys = {		// private keys will be stored locally, and may offloadded from the browser at the user's discretion.
+            'priv_key' : key_pack.priv_key,
+            'signer_priv_key' : key_pack.signer_priv_key,
+            'signature_protect' : {
+                "key" : storable_key,
+                "nonce" : nonce
+            }
+        }
+
+        let signature = await cwraps.key_signer(string_to_be_signed,key_pack.signer_priv_key)
+        let verified = await cwraps.verifier(string_to_be_signed,signature,key_pack.signer_pk_str)
+        t.true(verified)
+
+        let encrypted_sig = await cwraps.protect_hash(priv_keys,key,nonce,string_to_be_signed)
+        verified = await cwraps.verifier(string_to_be_signed,encrypted_sig,key_pack.signer_pk_str)
+        t.false(verified)
+        verified = await cwraps.verify_protected(string_to_be_signed,encrypted_sig,key_pack,key,nonce)
+        t.true(verified)
+        //
+        let ky_str = await cwraps.aes_to_str(key,"raw") 
+        let aes_key = await cwraps.aes_from_str(ky_str,"raw")
+
+        t.is(aes_key.type,key.type)
+        t.is(aes_key.extractable,key.extractable)
+        t.is(aes_key.algorithm.name,key.algorithm.name)
+        t.is(aes_key.algorithm.length,key.algorithm.length)
+        t.is(aes_key.usages[0],key.usages[0])
+        t.is(aes_key.usages[1],key.usages[1])
+
+        ky_str = await cwraps.aes_to_str(key,"jwk") 
+        t.true(ky_str.indexOf('"alg":"A256CBC"') > 0)
+        aes_key = await cwraps.aes_from_str(ky_str,"jwk")
+
+        t.is(aes_key.type,key.type)
+        t.is(aes_key.extractable,key.extractable)
+        t.is(aes_key.algorithm.name,key.algorithm.name)
+        t.is(aes_key.algorithm.length,key.algorithm.length)
+        t.is(aes_key.usages[0],key.usages[0])
+        t.is(aes_key.usages[1],key.usages[1])
+
+        let again_text = "Finally the last test again until the next last test."
+        let again_cipher_text = await cwraps.encipher_message(again_text,aes_key,nonce)
+        let wrapped_key = await cwraps.key_wrapper(aes_key,key_pack.pk_str)
+        let again_decipher_text =  await cwraps.decipher_message(again_cipher_text,wrapped_key,key_pack.priv_key,nonce)
+
+        t.is(again_text,again_decipher_text)
+
+
+        //
+        let results = report(t)
+        let txt = el.innerHTML
+        txt += "<br>" +  results[0] +  "<br>" +  results[1]
+        el.innerHTML = txt
+        //
+    })()
+</script>
+
+<body>
+    <span id="testing">sfss</span>
+</body>
+</html>
+
+<!-- 
+
+    <!doctype html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="author" content="Richard Leddy" />
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	<meta id="theme-color" name="theme-color" content="#452770">
+
+	<link rel="canonical" href="http://www.copious.world">
+
+	<title>Copious World - test crypto-wrap</title>
+	<meta name="description" content="An entry point into the our world of AI, IoT, and Communities built around songs, etc.">
+</head>
+
+<body>
+<h3>Crypto Wrap methods test</h3>
+<script type="module">
+    import * as crtypw from "../client/crypto-wraps.js"
+    (async () => {
+        let nonce = crtypw.gen_nonce()
+        console.log(nonce)
+        document.write(nonce)
+        document.write("this is a test")
+    })()
+</script>
+
+</body>
+
+-->
