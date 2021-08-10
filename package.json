@@ -1,13 +1,13 @@
 {
   "name": "crypto-wraps",
-  "version": "0.2.0",
+  "version": "1.0.1",
   "description": "Methods for convenience. Methods that wrap paticular use cases of crypto.subtle.",
   "main": "index.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "ava ./test/index.js"
+    "test": "ava ./test/index.js & http-server &  open http://localhost:8080/test/"
   },
   "devDependencies": {
     "ava": "^3.15.0",
