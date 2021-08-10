@@ -569,7 +569,7 @@ export async function encipher_message(message,aes_key,nonce) {
 //                          passed as a string that can be JSON.parsed into a jwk format object
 //        -- priv_key : the private key for unwrapping
 //        -- nonce : as a string storing a buffer base64url
-// Returns: bool
+// Returns: The clear string or false if it cannot be decrypted
 */
 export async function decipher_message(message,wrapped_key,priv_key,nonce) {
 	try {

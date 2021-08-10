@@ -223,7 +223,7 @@ async function encipher_message(message,aes_key,nonce) {
 //        -- wrapped_key :  aes key in a wrapped state returned from key_wraper
 //        -- priv_key : the private key for unwrapping
 //        -- nonce : as a string storing a buffer base64url
-// Returns: bool
+// Returns: The clear string or false if it cannot be decrypted
 */
 
 
