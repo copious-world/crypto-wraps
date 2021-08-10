@@ -19,9 +19,6 @@ All methods except *gen\_nonce* are asynchronous.
 * **galactic\_user\_starter\_keys**
 * **protect\_hash**
 * **verify\_protect**
-* **gen\_cipher\_key**
-* **galactic\_user\_starter\_keys**
-* **protect\_hash**
 * **gen\_public\_key**
 * **unwrapped\_aes\_key**
 * **key\_wrapper**
