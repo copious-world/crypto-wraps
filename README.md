@@ -1,6 +1,6 @@
 # crypto-wraps
  
-This module exposes convenience methods that wrap around webcrytpo.subtle or window.crypto.subtle, for use in the browser or in node.js. The methods provide a variety of use cases that by themselves require several steps with care to how data is passed in parameters, e.g. string, buffer, base encoding, encrypted, decrypted, public and private. These methods put some of those steps together and take are of many parameter concerns.
+This module exposes convenience methods that wrap around webcrypto.subtle or window.crypto.subtle, for use in the browser or in node.js. The methods provide a variety of use cases that by themselves require several steps with care to how data is passed in parameters, e.g. string, buffer, base encoding, encrypted, decrypted, public and private. These methods put some of those steps together and take are of many parameter concerns.
 
 ## node.js and browser
 
