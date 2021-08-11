@@ -4,7 +4,7 @@ This module exposes convenience methods that wrap around webcrypto.subtle or win
 
 ## node.js and browser
 
-The browser modules being int the **clients** directory. And, the node.js versions begin in the **lib** directory.
+The browser modules begin in the **clients** directory. And, the node.js versions begin in the **lib** directory.
 
 ## Methods
 
