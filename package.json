@@ -1,6 +1,6 @@
 {
   "name": "crypto-wraps",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Methods for convenience. Methods that wrap paticular use cases of crypto.subtle.",
   "main": "index.js",
   "directories": {
@@ -16,6 +16,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/copious-world/crypto-wraps.git"
+  },
+  "funding": {
+    "type" : "GitHub Sponsors",
+    "url" : "https://github.com/sponsors/copious-world"
   },
   "keywords": [
     "crypto",
