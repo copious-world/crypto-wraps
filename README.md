@@ -32,6 +32,8 @@ All methods except *gen\_nonce* are asynchronous.
 ## Code Doc - same as comments in code
 
 ```
+// gen_nonce()
+// Parameters: no parameters
 // generate a random vaue -- return it as string
 
 /*
