@@ -148,7 +148,7 @@ export async function aes_decipher_message(message,aes_key,nonce) {
 	}
 //
 */
-async function galactic_user_starter_keys(selector) {
+export async function galactic_user_starter_keys(selector) {
 	//
 	let pub_key_str = false
 	let priv_key_str = false
