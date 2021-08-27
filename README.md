@@ -32,9 +32,17 @@ All methods except *gen\_nonce* are asynchronous.
 ## Code Doc - same as comments in code
 
 ```
-// gen_nonce()
-// Parameters: no parameters
-// generate a random vaue -- return it as string
+/*
+// gen_nonce
+// Parameters: optional parameter
+// 	--	no parameter case
+// 	--	generate a random vaue -- return it as string
+// 	--	parameter (optional) : A base64url string that is at least 16 bytes
+//		-- returns the the first bytes as a base64url string (for deriving an IV from data) Not random
+// 
+// Returns a nonce as a base64url string representing 16 bytes = 128 bits
+*/
+
 
 /*
 // gen_cipher_key

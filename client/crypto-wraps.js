@@ -10,11 +10,25 @@ if ( window.g_crypto === undefined ) {
     
 }
 
-
-// generate a random vaue -- return it as string
-export function gen_nonce() {
-	let random = window.crypto.getRandomValues(new Uint8Array(16))
-	return to_base64_from_uint8array(random)
+/*
+// gen_nonce
+// Parameters: optional parameter
+// 	--	no parameter case
+// 	--	generate a random vaue -- return it as string
+// 	--	parameter (optional) : A base64url string that is at least 16 bytes
+//		-- returns the the first bytes as a base64url string (for deriving an IV from data) Not random
+// 
+// Returns a nonce as a base64url string representing 16 bytes = 128 bits
+*/
+export function gen_nonce(input_bits) {
+	if ( input_bits === undefined ) {
+		let random = window.crypto.getRandomValues(new Uint8Array(16))
+		return to_base64_from_uint8array(random)
+	} else {
+		let bytes = from_base64_to_uint8array(input_bits)
+		bytes = bytes.subarray(0, 16)
+		return to_base64_from_uint8array(bytes)
+	}
 }
 
 

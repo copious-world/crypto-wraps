@@ -26,6 +26,27 @@ test('crypto-hash', t => {
 })
 
 
+test('gen_nonce', async t => {
+    let nonce = cwraps.gen_nonce()
+    t.true(nonce !== undefined)
+    t.is(typeof nonce,'string')
+//console.log(`nonce ${nonce} ${nonce.length}`)
+    let text = "this is a long text string that is going to produce a uint8array(again) this is a long text string that is going to produce a uint8array"
+//console.log(text.length)
+    let enc = new TextEncoder()
+    let buf = enc.encode(text)
+    let input_nonce = hashit.to_base64_from_uint8array(buf)
+//console.log(`nonce ${input_nonce} ${input_nonce.length}`)
+    nonce = cwraps.gen_nonce(input_nonce)
+    t.true(nonce !== undefined)
+    t.is(typeof nonce,'string')
+    t.true(input_nonce.length > nonce.length)
+//console.log(`nonce ${nonce} ${nonce.length}`)
+    //
+    t.pass("this is a test")
+})
+
+
 test('crypto-wrap', async t => {
     let nonce = cwraps.gen_nonce()
 
