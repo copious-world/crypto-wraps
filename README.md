@@ -12,7 +12,8 @@ All methods except *gen\_nonce* are asynchronous.
 
 * **gen\_nonce**
 * **gen\_cipher\_key**
-* **pc\_keypair\_promise** 
+* **pc\_keypair\_promise**
+* **axiom\_keypair\_promise**
 * **pc\_wrapper\_keypair_promise**
 * **aes\_encryptor**
 * **aes\_decipher\_message**
@@ -21,6 +22,7 @@ All methods except *gen\_nonce* are asynchronous.
 * **verify\_protect**
 * **gen\_public\_key**
 * **unwrapped\_aes\_key**
+* **derive\_aes\_key**
 * **key\_wrapper**
 * **key\_unwrapper**
 * **aes\_to\_str**
@@ -28,6 +30,7 @@ All methods except *gen\_nonce* are asynchronous.
 * **key\_signer**
 * **verifier**
 * **decipher\_message**
+* **derived\_decipher\_message**
 
 ## Code Doc - same as comments in code
 
@@ -56,6 +59,14 @@ All methods except *gen\_nonce* are asynchronous.
 // Parameters: no parameters
 // Returns: a Promise that resolves to an elliptic curve key using P-384 with sign and verify privileges
 //  -- 
+
+
+//>--
+// axiom_keypair_promise
+// Parameters: no parameters
+// Returns: a Promise that resolve to an elliptic curve key using P-384 with cipher key derivation privileges. Allows for deriving AES 256 cipher key
+//  -- 
+
 
 //>--
 // pc_wrapper_keypair_promise
@@ -88,7 +99,7 @@ All methods except *gen\_nonce* are asynchronous.
 // galactic_user_starter_keys
 // Parameters: no parameters  (optional a selector parameter)
 // 
-// Optional parameters values:  "wrapper", "signer"  
+// Optional parameters values:  "wrapper", "signer", "derive"  
 //								Purpose:  produce only the selected key pair
 //    make a priv/pub key pair.
 // Return: an object containing all key pairs
@@ -97,7 +108,9 @@ All methods except *gen\_nonce* are asynchronous.
 		"pk_str" : pub_key_str,
 		"priv_key" : priv_key_str,
 		"signer_pk_str"  : sign_pub_key_str,
-		"signer_priv_key" : sign_priv_key_str
+		"signer_priv_key" : sign_priv_key_str,
+		"axiom_pk_str" : axiom_pub_key_str,
+		"axiom_priv_key" : axiom_priv_key_str
 	}
 //
 */
@@ -142,6 +155,16 @@ All methods except *gen\_nonce* are asynchronous.
 // Parameters: 
 //            -- wrapped_aes : as a buffer containing a jwk formatted key
 //            -- unwrapper_key : as a buffer the result of importing the key
+// Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with encrypte and decrypt permissions
+*/
+
+
+/*
+//>--
+// derive_aes_key
+// Parameters: 
+//            -- sender_pub_key_buffer : as a buffer containing a jwk formatted key
+//            -- local_private : as a buffer the result of importing the key
 // Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with encrypte and decrypt permissions
 */
 
@@ -228,9 +251,21 @@ async function encipher_message(message,aes_key,nonce) {
 /*
 // decipher_message
 // Parameters:
-//        -- message : base64url encoded string return from encipher
+//        -- message : base64url encoded string returned from encipher
 //        -- wrapped_key :  aes key in a wrapped state returned from key_wraper
 //        -- priv_key : the private key for unwrapping
+//        -- nonce : as a string storing a buffer base64url
+// Returns: The clear string or false if it cannot be decrypted
+*/
+
+
+/*
+// derived_decipher_message
+// Parameters:
+//        -- message :  base64url encoded string returned from encipher
+//        -- remote_public : a pubic key for ECDH P-384 key encryption 
+//                          passed as a string that can be JSON.parsed into a jwk format object
+//        -- priv_key : the private key forming the local counterpart to the sender_public key.
 //        -- nonce : as a string storing a buffer base64url
 // Returns: The clear string or false if it cannot be decrypted
 */
