@@ -1,6 +1,6 @@
 {
   "name": "crypto-wraps",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Methods for convenience. Methods that wrap paticular use cases of crypto.subtle.",
   "main": "index.js",
   "directories": {
@@ -8,19 +8,20 @@
   },
   "scripts": {
     "test": "ava ./test/index.js & http-server &  open http://localhost:8080/test/",
-    "untest" : "pkill -f http-server"
+    "untest": "pkill -f http-server"
   },
   "devDependencies": {
     "ava": "^3.15.0",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "roll-right": "^0.0.1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/copious-world/crypto-wraps.git"
   },
   "funding": {
-    "type" : "GitHub Sponsors",
-    "url" : "https://github.com/sponsors/copious-world"
+    "type": "GitHub Sponsors",
+    "url": "https://github.com/sponsors/copious-world"
   },
   "keywords": [
     "crypto",
