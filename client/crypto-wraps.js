@@ -82,7 +82,7 @@ export function pc_keypair_promise() {  // return
 export function axiom_keypair_promise() {
     // Generate a local public/private key pair
     let p =  g_crypto.generateKey({
-            'name': "ECDSA",
+            'name': "ECDH",
             'namedCurve': "P-384"
         },
         true,
