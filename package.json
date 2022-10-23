@@ -2,6 +2,7 @@
   "name": "crypto-wraps",
   "version": "1.1.6",
   "description": "Methods for convenience. Methods that wrap paticular use cases of crypto.subtle.",
+  "module" : "./client/crypto-wraps.mjs",
   "main": "index.js",
   "directories": {
     "lib": "lib"
