@@ -599,7 +599,7 @@ async function afoo() {
 
 <a name="ecdh_to_str" > </a>
 
-* **ecdh\_to\_str***
+* **ecdh\_to\_str**
 
 >  **Parameters** {
 > 
@@ -636,6 +636,29 @@ async function afoo() {
 
 * **importAESKey**
 
+>  **Parameters** {
+> 
+```
+rawKey --  This is an array buffer containing a key or it may be a JWK Object
+transport_type :  can be "jwk" or "raw"
+```
+}
+>
+> Import an AES secret key from an ArrayBuffer containing the raw bytes or from JWK.
+  Takes an ArrayBuffer containing the bytes or JWK object
+> Calls the import method on the raw key and turns it into a CrypoKey eventually. Imports the key as a key with ***encrypt*** and ***decrypt*** privileges.
+> 
+> **Returns**: A promise that resolves to a CryptoKey.
+
+**Use case:**
+
+```
+async function afoo() {
+	let my_aes_key = await importAESKey(raw_key,"jwk")
+	...
+}
+```
+
 
 [**contents**](#method-list)
 
@@ -646,13 +669,25 @@ async function afoo() {
 
 * **importECDHKey**
 
+>  **Parameters** {
+> 
+```
+rawKey --  This is an array buffer containing a key or it may be a JWK Object
+transport_type :  can be "jwk" or "raw"
+```
+}
+>
+
+> 
+> Calls the import method on the raw key or JWK object and then turns it into a CryptoKey eventually. 
+> If the jwk option is used, sets key_ops to "deriveKey", enabling import as a key with ***derivation*** privileges.
+> 
+> **Returns**: A promise that resolves to a CryptoKey.
 
 
 [**contents**](#method-list)
 
 ------------------------------------------------------------------------
-
-
 
 <a name="aes_from_str" > </a>
 
@@ -687,107 +722,193 @@ async function afoo() {
 ------------------------------------------------------------------------
 
 
-
-
 <a name="key_signer" > </a>
 
+* **key\_signer**
+
+>  **Parameters** {
+> 
+```
+data_to_sign - as a string that will be passed to a TextEncoder
+priv_signer_key - the private key (for instance a sender key)
+					  for signing  passed as a string that can be
+					  JSON.parserd into a jwk format
+```
+}
+> 
+> Calls the imprort method on the key previously formatted as a string.
+> 
+> **Returns**: a base64url string containing the signature
+
+**Use case:**
 
 ```
-/*
-// key_signer
-// Parameters:
-//        -- data_to_sign  as a string 
-//        -- priv_signer_key :  the private key (for instance a sender key) for signing 
-//                              passed as a string that can be JSON.parserd into a jwk format
-// Returns: the a base64url string containing the signature
-*/
-
+async function afoo() {
+	let data_to_sign = "The quick brown fox has had just about enough of this jumping over fences thing."
+	let priv_signer_key = await fetch_my_priv_ecdsa_string()
+	let aes_key = await key_signer(data_to_sign,priv_signer_key)
+	...
+}
 ```
 
 
 [**contents**](#method-list)
 
 ------------------------------------------------------------------------
-
-
 
 
 <a name="verifier" > </a>
 
 
+* **verifier**
+
+>  **Parameters** {
+> 
+```
+was_signed_data - as a string that was originially passed to key_signer
+signature - the a base64url string containing the signature
+signer_pub_key -  the public key (for instance a sender key) for
+                  verification passed as a string that can be
+                  JSON.parsed into a jwk formatß
+```
+}
+> 
+> Transforms inputs into data types that can be used by verify. 
+> 
+> **Returns**: true if the signature passes the test
+
+**Use case:**
+
+```
+async function afoo() {
+	let signature = await signture_from_sender()
+	let was_signed_data = "The quick brown fox has had just about enough of this jumping over fences thing."
+	let signer_pub_key = await fetch_public_ecdsa_string()
+	
+	let aes_key = await verifier(was_signed_data, signature, signer_pub_key)
+	...
+}
 ```
 
-/*
-// verifier
-// Parameters:
-//		-- was_signed_data : as a string that was originially passed to key_signer
-//		-- signature : the a base64url string containing the signature
-//		-- signer_pub_key :  the public key (for instance a sender key) for verification  
-//                           passed as a string that can be JSON.parserd into a jwk format
-// Returns: bool
-*/
-
-```
 
 
 [**contents**](#method-list)
 
 ------------------------------------------------------------------------
-
 
 
 
 <a name="encipher_message" > </a>
 
 
-```
+* **encipher\_message**
 
-/*
-// encipher_message
-// Parameters:
-//        -- message :  a text string
-//        -- aes_key :  as CryptoKey
-//        -- nonce : as a string storing a buffer base64url
-// Returns: a base64url encoding of the enciphered buffer
-*/
-async function encipher_message(message,aes_key,nonce) {
-	try {
-		if ( aes_key ) {
-			let iv_nonce = from_base64_to_uint8array(nonce)
-			let enciphered = await aes_encryptor(message,aes_key,iv_nonce)
-			let b8a = new Uint8Array(enciphered)
-			return to_base64_from_uint8array(b8a)
-		}
-	} catch(e) {
-		console.log(e)
-	}
-	return false
+>  **Parameters** {
+> 
+```
+was_signed_data - as a string that was originially passed to key_signer
+signature - the a base64url string containing the signature
+signer_pub_key -  the public key (for instance a sender key) for
+                  verification passed as a string that can be
+                  JSON.parsed into a jwk formatß
+```
 }
+> 
+> Transforms inputs into data types that can be used by verify. 
+> 
+> **Returns**: true if the signature passes the test
+
+**Use case:**
 
 ```
+async function afoo() {
+	let signature = await signture_from_sender()
+	let was_signed_data = "The quick brown fox has had just about enough of this jumping over fences thing."
+	let signer_pub_key = await fetch_public_ecdsa_string()
+	
+	let aes_key = await verifier(was_signed_data, signature, signer_pub_key)
+	...
+}
+```
+
+
+
+
+
+[**contents**](#method-list)
+
+------------------------------------------------------------------------
+
+<a name="derived_encipher_message" > </a>
+
+* **derived\_encipher\_message**
+
+>  **Parameters** {
+> 
+```
+message - a text string
+remote_public_ky - as CryptoKey
+local_private_ky :  as CryptoKey
+nonce : as a string storing a buffer base64url
+```
+}
+> 
+> Derives an AES key and then uses it to encipher the message. 
+> 
+> **Returns**: A base64url encoded string of the encrypted message.
+
+**Use case:**
+
+```
+async function afoo() {
+	//
+	let text = "A quicker brown fox avoided the fence altogether"
+	let remote_public_ky = await for_a_key_from_partner()
+	let local_private_ky = awat fetch_my_private_ecdh_key()
+	let nonce = gen_nonce()
+	let enciphered = await derived_encipher_message(text,remote_public_ky, local_private_ky,nonce)
+	...
+}
+```
+
 
 [**contents**](#method-list)
 
 ------------------------------------------------------------------------
 
 
-
-
 <a name="decipher_message" > </a>
 
+* **decipher\_message**
+
+>  **Parameters** {
+> 
+```
+message - base64url encoded, encrypted string returned from encipher
+wrapped_key - wrapped AES key passed as a string in base64url format
+priv_key - the private key witgh unwrap privileges passed as a string that can be JSON.parsed into a jwk format object
+nonce - as a string storing a buffer base64url
+```
+}
+> 
+> Decrypts a message given the transport version of keys.
+> 
+> **Returns**: The clear string or false if it cannot be decrypted
+
+**Use case:**
+
+```
+async function afoo() {
+	//
+	let [wrapped_key, nonce] = await get_key_from_partner()
+	// later
+	let message = await recieve_encrypted_message()
+	let priv_key = await fetch_my_private_key()
+	let clear_text = await decipher_message(message,wrapped_key,priv_key,nonce)
+		...
+}
 ```
 
-/*
-// decipher_message
-// Parameters:
-//        -- message : base64url encoded string returned from encipher
-//        -- wrapped_key :  aes key in a wrapped state returned from key_wraper
-//        -- priv_key : the private key for unwrapping
-//        -- nonce : as a string storing a buffer base64url
-// Returns: The clear string or false if it cannot be decrypted
-*/
-
-```
 
 
 [**contents**](#method-list)
@@ -799,21 +920,36 @@ async function encipher_message(message,aes_key,nonce) {
 <a name="derived_decipher_message" > </a>
 
 
+* **derived\_decipher\_message**
+
+>  **Parameters** {
+> 
+```
+message - base64url encoded, encrypted string returned from encipher
+remote_public - a pubic key for ECDH P-384 key encryption passed as a string that can be JSON.parsed
+priv_key - the private key witgh unwrap privileges passed as a string that can be JSON.parsed into a jwk format object
+nonce - as a string storing a buffer base64url
+```
+}
+> 
+> Decrypts a message given the transport version of keys.
+> 
+> **Returns**: The clear string or false if it cannot be decrypted
+
+**Use case:**
+
+```
+async function afoo() {
+	//
+	let [wrapped_key, nonce] = await get_key_from_partner()
+	// later
+	let message = await recieve_encrypted_message()
+	let priv_key = await fetch_my_private_key()
+	let clear_text = await derived_decipher_message(message,wrapped_key,priv_key,nonce)
+		...
+}
 ```
 
-/*
-// derived_decipher_message
-// Parameters:
-//        -- message :  base64url encoded string returned from encipher
-//        -- remote_public : a pubic key for ECDH P-384 key encryption 
-//                          passed as a string that can be JSON.parsed into a jwk format object
-//        -- priv_key : the private key forming the local counterpart to the sender_public key.
-//        -- nonce : as a string storing a buffer base64url
-// Returns: The clear string or false if it cannot be decrypted
-*/
-
-
-```
 
 [**contents**](#method-list)
 
