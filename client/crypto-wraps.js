@@ -32,6 +32,7 @@ export function gen_nonce(input_bits) {
 }
 
 
+//$>>	gen_cipher_key
 /*
 // gen_cipher_key
 //    -- generates an AES key "AES-CBC",256 for encrypting and decrypting
@@ -55,12 +56,13 @@ export async function gen_cipher_key() {
 }
 
 
+//$>>	keypair_promise
 //>--
-// pc_keypair_promise
+// keypair_promise
 // Parameters: no parameters
 // Returns: a Promise that resolves to an elliptic curve key using P-384 with sign and verify privileges
 //  -- 
-export function pc_keypair_promise() {  // return 
+export function keypair_promise() {  // return 
     // Generate a local public/private key pair
     let p =  g_crypto.generateKey({
             'name': "ECDSA",
@@ -74,6 +76,7 @@ export function pc_keypair_promise() {  // return
 //-
 
 
+//$>>	axiom_keypair_promise
 //>--
 // axiom_keypair_promise
 // Parameters: no parameters
@@ -92,12 +95,13 @@ export function axiom_keypair_promise() {
 }
 
 
+//$>>	wrapper_keypair_promise
 //>--
-// pc_wrapper_keypair_promise
+// wrapper_keypair_promise
 // Parameters: no parameters
 // Returns: a Promise that resolves to an RSA-OAEP key modulus 4096 hash to SHA-256 with wrapKey and unwrapKey privileges
 //  -- 
-export function pc_wrapper_keypair_promise() {  // return 
+export function wrapper_keypair_promise() {  // return 
     // Generate a local public/private key pair
     let p =  g_crypto.generateKey({
             name: "RSA-OAEP",
@@ -113,31 +117,42 @@ export function pc_wrapper_keypair_promise() {  // return
 //--<
 
 
+//$>>	aes_encryptor
 /*
 // aes_encryptor
 // Parameters:  
-//        		encodable -  a string
+//        		encodable -  a string or a uint8array
 //   			aes_key - aes_key as CryptoKey
 //				nonce - random (gen_nonce) passed as a uint8Array
 // Returns: The enciphered text ArrayBuffer
 */
 export async function aes_encryptor(encodable,aes_key,nonce) {
 
-	let enc = new TextEncoder();
-	let clear_buf =  enc.encode(encodable);
-	let iv = nonce
+	let clear_buf = false
+	if ( typeof encodable === 'string' ) {
+		let enc = new TextEncoder();
+		clear_buf =  enc.encode(encodable);
+	} else if ( (encodable.constructor.name === 'Uint8Array') ||  (encodable.constructor.name === 'Buffer') ) {
+		clear_buf = encodable
+	}
 
-    let ciphertext = await g_crypto.encrypt({
-												name: "AES-CBC",
-												iv
-											},
-											aes_key,
-											clear_buf
-										);
-	return ciphertext
+	if ( clear_buf ) {
+		let iv = nonce
+		let ciphertext = await g_crypto.encrypt({
+													name: "AES-CBC",
+													iv
+												},
+												aes_key,
+												clear_buf
+											);
+		return ciphertext
+	}
+
+	return false
 }
 
 
+//$>>	aes_decipher_message
 /*
 // aes_decipher_message
 // Parameters:  
@@ -160,11 +175,12 @@ export async function aes_decipher_message(message,aes_key,nonce) {
 	let clear = dec.decode(decrypted)
 	return clear
 }
-//
+// 
+
 // 
 
 
-
+//$>>	galactic_user_starter_keys
 /*
 // galactic_user_starter_keys
 // Parameters: no parameters or (optional) a selector parameter
@@ -190,7 +206,7 @@ export async function galactic_user_starter_keys(selector) {
 	let priv_key_str = false
 	if ( (selector === undefined) || (selector === "wrapper") ) {
 		// Generate a local public/private key pair WRAPPER
-		let keypair = await pc_wrapper_keypair_promise()
+		let keypair = await wrapper_keypair_promise()
 		// ---- ---- ---- ----
 		let pub_key = keypair.publicKey
 		let priv_key = keypair.privateKey
@@ -206,7 +222,7 @@ export async function galactic_user_starter_keys(selector) {
 	let sign_priv_key_str = false
 	if ( (selector === undefined) || (selector === "signer") ) {
 		// Generate a local public/private key pair SIGNER
-		let signer_pair = await pc_keypair_promise()
+		let signer_pair = await keypair_promise()
 
 		let signer_pub_key = signer_pair.publicKey
 		let signer_priv_key = signer_pair.privateKey
@@ -234,7 +250,7 @@ export async function galactic_user_starter_keys(selector) {
 		let axiom_priv_exported = await g_crypto.exportKey("jwk",axiom_priv_key);
 		axiom_priv_key_str =  JSON.stringify(axiom_priv_exported);
 	}
-	
+
 	//
 	let key_info = {
 		"pk_str" : pub_key_str,
@@ -264,7 +280,7 @@ export async function galactic_user_starter_keys(selector) {
 
 
 
-
+//$>>	protect_hash
 /*
 // protect_hash
 // Parameters: 
@@ -272,7 +288,7 @@ export async function galactic_user_starter_keys(selector) {
 //          -- aes_key - aes key as CryptoKey
 //          -- nonce - base64url encoded uint8Array
 //          -- string_to_be_signed
-// wrap a hash of the biomarker -- done before server create identity operation 
+// use to wrap a hash of the biomarker -- done before server create identity operation 
 // Returns: As the toString of a Uint8Array  (commad delimited entries, csv)
 */
 
@@ -294,15 +310,15 @@ export async function protect_hash(priv_keys,aes_key,nonce,string_to_be_signed) 
 }
 
 
+//$>>	verify_protected
 /*
 // verify_protected
 // Parameters: 
 //          -- string_that_was_signed - (just the string as is)
 //			-- encrypted_sig - the signature returned by protect_hash
-//          -- aes_key - aes key as CryptoKey
 //			-- pub_keys - An object containing public keys {pub_keys.signer_pk_str}
+//          -- aes_key - aes key as CryptoKey
 //          -- nonce - base64url encoded uint8Array
-//          -- string_to_be_signed
 // wrap a hash of the biomarker -- done before server create identity operation 
 // Returns: As the toString of a Uint8Array  (commad delimited entries, csv)
 */
@@ -330,35 +346,8 @@ export async function verify_protected(string_that_was_signed,encrypted_sig,pub_
 	return false
 }
 
-/*
-// gen_public_key
-// Parameters:
-//     		-- info - an info object (javascript object) which gain fields info.public_key and info.signer_public_key
-//                      optionally provides a field info.biometric, which will be signed and signature will be put into this field
-//       	-- store_info - a method taking two parameters (info,privates)  privates is the Object created in this method
-*/
-export async function gen_public_key(info,store_info) {
-	let keys = await galactic_user_starter_keys()
-	//
-	info.public_key = keys.pk_str		// user info is the basis for creating a user cid the public key is part of it
-	info.signer_public_key = keys.signer_pk_str
-	//
-	let aes_key = await gen_cipher_key()
-	let storable_key = await aes_to_str(aes_key) 
-	let nonce = gen_nonce()
-	//
-	let privates = {		// private keys will be stored locally, and may offloadded from the browser at the user's discretion.
-		'priv_key' : keys.priv_key,
-		'signer_priv_key' : keys.signer_priv_key,
-		'signature_protect' : {
-			"key" : storable_key,
-			"nonce" : nonce
-		}
-	}
-	info.biometric = await protect_hash(privates,aes_key,nonce,info.biometric)
-	if ( store_info ) store_info(info,privates)
-}
 
+//$>>	unwrapped_aes_key
 /*
 //>--
 // unwrapped_aes_key
@@ -391,15 +380,16 @@ export async function unwrapped_aes_key(wrapped_aes,unwrapper_key) {
 //--<
 
 
+//$>>	derive_aes_key
 /*
 //>--
 // derive_aes_key
 // Parameters: 
-//            -- sender_pub_key_buffer : as a buffer containing a jwk formatted key
+//            -- remote_pub_key_buffer : as a buffer containing a jwk formatted key
 //            -- local_private : as a buffer the result of importing the key
 // Returns: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with encrypte and decrypt permissions
 */
-export function derive_aes_key(remote_pub_key_buffer,local_private) {
+export async function derive_aes_key(remote_pub_key_buffer,local_private) {
 	let derived_aes = await g_crypto.deriveKey(
 	  {
 		name: "ECDH",
@@ -418,6 +408,7 @@ export function derive_aes_key(remote_pub_key_buffer,local_private) {
 }
 
 
+//$>>	key_wrapper
 /*
 // key_wrapper
 // Parameters:
@@ -459,6 +450,7 @@ export async function key_wrapper(key_to_wrap,pub_wrapper_key) {
 }
 
 
+//$>>	key_unwrapper
 /*
 // key_unwrapper
 // Parameters:
@@ -489,29 +481,26 @@ export async function key_unwrapper(wrapped_key,piv_wrapper_key) {
 
 
 
-
+//$>>	derive_key
 /*
 // derive_key
 // Parameters:
-//        -- sender_public_key : as base64url encoded uint8array representation of a ECDH public key with derivation privileges.
-//        -- piv_axiom_key :  the private key (for instance a sender key) as a JSON.parseable string representing jwk
-// Returns: the unwrapped key in a string that can be sent
+//        -- sender_public_key : base64 buffer of a ECDH public key with derivation privileges.
+//        -- piv_axiom_key :  the private key (for instance a sender key) as a JSON.parseable string representing jwk derivation privileges.
+// Returns: the derived key in a string that can be sent
 */
 export async function derive_key(sender_public_key,piv_axiom_key) {
 	let axiom_jwk = JSON.parse(piv_axiom_key)
 	let local_private = await g_crypto.importKey(
 			"jwk",
 			axiom_jwk,
-			{   //these are the wrapping key's algorithm options
-				name: "RSA-OAEP",
-				modulusLength: 4096, //can be 1024, 2048, or 4096
-				publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
-				hash: { name: "SHA-256" }, //can be "SHA-1", "SHA-256", "SHA-384", or "SHA-512"
+			{
+				'name': "ECDH",
+				'namedCurve': "P-384"
 			},
 			true,
 			["deriveKey"]
 	);
-	
 	// wrapped_key
 	let sender_pub_key_buffer = from_base64_to_uint8array(sender_public_key)
 	let aes_key = await derive_aes_key(sender_pub_key_buffer,local_private)
@@ -520,7 +509,7 @@ export async function derive_key(sender_public_key,piv_axiom_key) {
 
 
 
-
+//$>>	aes_to_str
 /*
 // aes_to_str 
 // Parameters: 
@@ -546,16 +535,47 @@ export async function aes_to_str(aes_key,transport_type) {
 	}
 }
 
+
+
+//$>>	ecdh_to_str
+/*
+// ecdh_to_str 
+// Parameters: 
+        -- ecdh_key - as Cryptokey
+        -- transport_type :  can be "jwk" or "raw"
+  Export an AES secret key given an ArrayBuffer containing the raw bytes.
+// Returns: the export key JSON.stringify if 'jwk' ||  base64url Uint8Array if 'raw'
+*/
+
+export async function ecdh_to_str(ecdh_key,transport_type) {
+	switch ( transport_type ) {
+		case "jwk" : {
+			const exported = await g_crypto.exportKey("jwk", ecdh_key);
+			exported.key_ops = [ 'deriveKey' ]   // this had to be added ?? is it a bug with key generation?
+			let key_str = JSON.stringify(exported)
+			return key_str
+		}
+		case "raw" :
+		default: {
+			const exported = await g_crypto.exportKey("raw", ecdh_key);
+			const exportedKeyBuffer = new Uint8Array(exported);
+			let key_str = to_base64_from_uint8array(exportedKeyBuffer)
+			return key_str
+		}
+	}
+}
+
+//$>>	importAESKey
 /*
 // importAESKey
 // Parameters:
-//        -- rawKey 
+//        -- rawKey or JWK object
 //        -- transport_type :  can be "jwk" or "raw"
 // Returns:  a Promise   (await this function) resolves to a CryptoKey representing the secret key
   Import an AES secret key from an ArrayBuffer containing the raw bytes.
-  Takes an ArrayBuffer string containing the bytes.
+  Takes an ArrayBuffer containing the bytes or a JWK object.
 */
-function importAESKey(rawKey,transport_type) {
+export function importAESKey(rawKey,transport_type) {
   return g_crypto.importKey(
 		transport_type,
 		rawKey,
@@ -568,6 +588,42 @@ function importAESKey(rawKey,transport_type) {
   );
 }
 
+
+
+//$>>	importECDHKey
+/*
+// importECDHKey
+// Parameters:
+//        -- rawKey or JWK object
+//        -- transport_type :  can be "jwk" or "raw"
+// Returns:  a Promise   (await this function) resolves to a CryptoKey representing the secret key
+  Import an ECDH secret key from an ArrayBuffer containing the raw bytes or from JWK.
+  Takes an ArrayBuffer string containing the bytes.
+*/
+export function importECDHKey(axiomKey,transport_type) {
+	if ( typeof axiomKey === "string" ) {
+		axiomKey = JSON.parse(axiomKey)
+	}
+	if ( transport_type === 'jwk' ) {
+		if ( (axiomKey.key_ops === undefined) || ( Array.isArray(axiomKey.key_ops) && axiomKey.key_ops.length === 0 ) ) {
+			axiomKey.key_ops = ["deriveKey"]
+		}
+	}
+	return g_crypto.importKey(
+		transport_type,
+		axiomKey,
+		{
+			'name': "ECDH",
+			'namedCurve': "P-384"
+		},
+		true,
+		["deriveKey"]
+	);
+}
+
+  
+
+//$>>	aes_from_str
 /*
 // aes_from_str
 // Parameters:
@@ -595,12 +651,13 @@ export async function aes_from_str(aes_key_str,transport_type) {
 }
 
 
+//$>>	key_signer
 /*
 // key_signer
 // Parameters:
 //        -- data_to_sign  as a string 
 //        -- priv_signer_key :  the private key (for instance a sender key) for signing 
-//                              passed as a string that can be JSON.parserd into a jwk format
+//                              passed as a string that can be JSON.parsed into a jwk format
 // Returns: the a base64url string containing the signature
 */
 export async function key_signer(data_to_sign,priv_signer_key) {
@@ -637,6 +694,7 @@ export async function key_signer(data_to_sign,priv_signer_key) {
 }
 
 
+//$>>	verifier
 /*
 // verifier
 // Parameters:
@@ -680,7 +738,7 @@ export async function verifier(was_signed_data,signature,signer_pub_key) {
 	return false
 }
 
-
+//$>>	encipher_message
 /*
 // encipher_message
 // Parameters:
@@ -689,9 +747,40 @@ export async function verifier(was_signed_data,signature,signer_pub_key) {
 //        -- nonce : as a string storing a buffer base64url
 // Returns: a base64url encoding of the enciphered buffer
 */
-export async function encipher_message(message,aes_key,nonce) {
+export async function encipher_message(message,aes_key,nonce,no_string) {
 	try {
 		if ( aes_key ) {
+			let iv_nonce = from_base64_to_uint8array(nonce)
+			let enciphered = await aes_encryptor(message,aes_key,iv_nonce)
+			let b8a = new Uint8Array(enciphered)
+			if ( no_string ) {
+				return b8a
+			} else {
+				return to_base64_from_uint8array(b8a)
+			}
+		}
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+// 
+
+
+//$>>	derived_encipher_message
+/*
+// derived_encipher_message
+// Parameters:
+//        -- message :  a text string
+//        -- remote_public_ky :  as CryptoKey
+//		  -- local_private_ky :  as CryptoKey
+//        -- nonce : as a string storing a buffer base64url
+// Returns: a base64url encoding of the enciphered buffer
+*/
+export async function derived_encipher_message(message,remote_public_ky,local_private_ky,nonce) {
+	try {
+		if ( remote_public_ky && local_private_ky ) {
+			let aes_key = await derive_aes_key(remote_public_ky,local_private_ky)
 			let iv_nonce = from_base64_to_uint8array(nonce)
 			let enciphered = await aes_encryptor(message,aes_key,iv_nonce)
 			let b8a = new Uint8Array(enciphered)
@@ -704,11 +793,11 @@ export async function encipher_message(message,aes_key,nonce) {
 }
 // 
 
-
+//$>>	decipher_message
 /*
 // decipher_message
 // Parameters:
-//        -- message :  as a string storing a buffer formatted as csv of the entries
+//        -- message :  base64url encoded string returned from encipher
 //        -- wrapped_key :  wrapped aes key 
 //                          passed as a string that can be JSON.parsed into a jwk format object
 //        -- priv_key : the private key for unwrapping
@@ -732,6 +821,7 @@ export async function decipher_message(message,wrapped_key,priv_key,nonce) {
 // 
 
 
+//$>>	derived_decipher_message
 /*
 // derived_decipher_message
 // Parameters:
@@ -756,35 +846,138 @@ export async function derived_decipher_message(message,remote_public,priv_key,no
 	}
 	return false
 }
-//
+// 
+
+
+
+//$>>	derive_key_jwk
+/*
+// derive_key_jwk
+// Parameters:
+//        -- sender_public_key :  as a JSON.parseable string representing jwk.
+//        -- piv_axiom_key :  the private key (for instance a sender key) as a JSON.parseable string representing jwk
+// Returns: the unwrapped key in a string that can be sent
+*/
+export async function derive_key_jwk(sender_public_key,piv_axiom_key) {
+    //
+	let sender_pub_key = JSON.parse(sender_public_key)
+	let remote_public = await g_crypto.importKey(
+			"jwk",
+			sender_pub_key,
+			{
+            'name': "ECDH",
+            'namedCurve': "P-384"
+            },
+			true,
+			["deriveKey"]
+	);
+
+	let axiom_jwk = JSON.parse(piv_axiom_key)
+	let local_private = await g_crypto.importKey(
+			"jwk",
+			axiom_jwk,
+			{
+            'name': "ECDH",
+            'namedCurve': "P-384"
+            },
+			true,
+			["deriveKey"]
+	);
+	
+	let aes_key = await derive_aes_key(remote_public,local_private)
+	return aes_key
+}
+
+
+
+
+export async function derived_decipher_message_jwk(message,remote_public,priv_key,nonce) {
+	try {
+		let aes_key = await derive_key_jwk(remote_public,priv_key)
+		if ( aes_key ) {
+			let iv_nonce = from_base64_to_uint8array(nonce)
+			let buffer = from_base64_to_uint8array(message)
+			let clear = await aes_decipher_message(buffer,aes_key,iv_nonce)
+			return clear
+		}
+	} catch(e) {
+		console.log(e)
+	}
+	return false
+}
+
+
+//$>>	gen_public_key
+/*
+// gen_public_key
+// Parameters:
+//     		-- info - an info object (javascript object) which has fields info.public_key and info.signer_public_key
+//                      optionally provides a field info.biometric, which will be signed and signature will be put into this field
+//       	-- store_info - a method taking two parameters (info,privates)  privates is the Object created in this method
+*/
+export async function gen_public_key(info,store_info) {
+	let keys = await galactic_user_starter_keys()
+	//
+	info.public_key = keys.pk_str		// user info is the basis for creating a user cid the public key is part of it
+	info.signer_public_key = keys.signer_pk_str
+	info.axiom_public_key = keys.axiom_pk_str
+	//
+	let aes_key = await gen_cipher_key()
+	let storable_key = await aes_to_str(aes_key) 
+	let nonce = gen_nonce()
+	//
+	let privates = {		// private keys will be stored locally, and may offloadded from the browser at the user's discretion.
+		'priv_key' : keys.priv_key,
+		'signer_priv_key' : keys.signer_priv_key,
+		'axiom_priv_key' : keys.axiom_priv_key,
+		'signature_protect' : {
+			"key" : storable_key,
+			"nonce" : nonce
+		}
+	}
+	info.biometric = await protect_hash(privates,aes_key,nonce,info.biometric)
+	if ( store_info ) store_info(info,privates)
+}
+
+// 
+
+//$$EXPORTABLE::
+
+
 
 
 // ----------------------------  allow certain methods to be global (up to the application to call)
 export function windowize_crypto_wraps() {
   //
 	window.gen_nonce = gen_nonce
+	window.gen_cipher_key = gen_cipher_key
+	window.keypair_promise = keypair_promise
+	window.axiom_keypair_promise = axiom_keypair_promise
+	window.wrapper_keypair_promise = wrapper_keypair_promise
 	window.aes_encryptor = aes_encryptor
 	window.aes_decipher_message = aes_decipher_message
-	window.pc_keypair_promise = pc_keypair_promise
-	window.pc_wrapper_keypair_promise = pc_wrapper_keypair_promise
-	window.axiom_keypair_promise = axiom_keypair_promise
-	//
 	window.galactic_user_starter_keys = galactic_user_starter_keys
-	//
-	window.gen_cipher_key = gen_cipher_key
 	window.protect_hash = protect_hash
 	window.verify_protected = verify_protected
-	window.gen_public_key = gen_public_key
 	window.unwrapped_aes_key = unwrapped_aes_key
-	window.derive_key = derive_key
-	window.aes_to_str = aes_to_str
-	window.aes_from_str = aes_from_str
+	window.derive_aes_key = derive_aes_key
+	window.derive_key_jwk = derive_key_jwk
 	window.key_wrapper = key_wrapper
 	window.key_unwrapper = key_unwrapper
+	window.derive_key = derive_key
+	window.aes_to_str = aes_to_str
+	window.ecdh_to_str = ecdh_to_str
+	window.importAESKey = importAESKey
+	window.importECDHKey = importECDHKey
+	window.aes_from_str = aes_from_str
 	window.key_signer = key_signer
 	window.verifier = verifier
 	window.encipher_message = encipher_message
+	window.derived_encipher_message = derived_encipher_message
 	window.decipher_message = decipher_message
 	window.derived_decipher_message = derived_decipher_message
+	//
+	window.derived_decipher_message_jwk = derived_decipher_message_jwk
+	window.gen_public_key = gen_public_key
   //
 }

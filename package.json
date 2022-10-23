@@ -30,7 +30,8 @@
     "aes",
     "wrapper",
     "sign",
-    "verify"
+    "verify",
+    "elliptic"
   ],
   "author": "Richard Leddy",
   "license": "MIT",

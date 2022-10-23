@@ -24,7 +24,6 @@ npm -i --save-dev crypto-wraps
 
 ## Methods
 
-
 All methods except *gen\_nonce* are asynchronous.
 
 * [**gen\_nonce**](#gen-nonce)
@@ -40,6 +39,7 @@ All methods except *gen\_nonce* are asynchronous.
 * [**verify\_protected**](#verify_protected)
 * [**unwrapped\_aes\_key**](#unwrapped_aes_key)
 * [**derive\_aes\_key**](#derive_aes_key)
+* [**derive\_key\_jwk**](#derive_key_jwk)
 * [**key\_wrapper**](#key_wrapper)
 * [**key\_unwrapper**](#key_unwrapper)
 * [**derive\_key**](#derive_key)
@@ -53,9 +53,8 @@ All methods except *gen\_nonce* are asynchronous.
 * [**encipher\_message**](#encipher_message)
 * [**decipher\_message**](#decipher_message)
 * [**derived\_decipher\_message**](#derived_decipher_message)
+* [**derived\_decipher\_message\_jwk**](#derived_decipher_message_jwk)
 * [**gen\_public\_key**](#gen_public_key)
-
-
 
 
 
@@ -451,6 +450,41 @@ async function afoo() {
 [**contents**](#method-list)
 
 ------------------------------------------------------------------------
+
+
+<a name="derive_key_jwk" > </a>
+
+* **derive\_key\_jwk**
+
+>  **Parameters** {
+> 
+```
+sender_public_key - as a JSON.parseable string representing jwk.
+piv_axiom_key - the private key as a JSON.parseable string representing jwk
+```
+}
+> 
+> Derives as AES key: AES-CBC 256. Uses the ECDH keys in strings parseable into JSON JWK format. Calls **derive\_aes\_key**.
+> 
+> **Returns**: aes_key as a CryptoKey structure (see crypto.subtle.generateKey) with ***encrypt*** and ***decrypt*** permissions.
+
+**Use case:**
+
+```
+async function afoo() {
+	let remote_key = await transfered_imported_buffer()
+	let local_key = await retrieved_imported_keys()
+	//
+	let aes_key = derive_key_jwk(remote_key, local_key)
+	...
+}
+```
+
+
+[**contents**](#method-list)
+
+------------------------------------------------------------------------
+
 
 
 <a name="key_wrapper" > </a>
@@ -926,7 +960,7 @@ async function afoo() {
 > 
 ```
 message - base64url encoded, encrypted string returned from encipher
-remote_public - a pubic key for ECDH P-384 key encryption passed as a string that can be JSON.parsed
+remote_public - a pubic key for ECDH P-384 key encryption passed as a string in base64url format representing a raw key
 priv_key - the private key witgh unwrap privileges passed as a string that can be JSON.parsed into a jwk format object
 nonce - as a string storing a buffer base64url
 ```
@@ -941,11 +975,12 @@ nonce - as a string storing a buffer base64url
 ```
 async function afoo() {
 	//
-	let [wrapped_key, nonce] = await get_key_from_partner()
+	let [remote_public, nonce] = await get_derivation_key_from_partner()
+	// nonce is aes initialization vector
 	// later
 	let message = await recieve_encrypted_message()
 	let priv_key = await fetch_my_private_key()
-	let clear_text = await derived_decipher_message(message,wrapped_key,priv_key,nonce)
+	let clear_text = await derived_decipher_message(message,remote_public,priv_key,nonce)
 		...
 }
 ```
@@ -956,20 +991,61 @@ async function afoo() {
 ------------------------------------------------------------------------
 
 
+<a name="derived_decipher_message_jwk" > </a>
+
+
+* **derived\_decipher\_message\_jwk**
+
+>  **Parameters** {
+> 
+```
+message - base64url encoded, encrypted string returned from encipher
+remote_public - a pubic key for ECDH P-384 key encryption passed as a string that can be JSON.parsed into a jwk format object
+priv_key - the private key witgh unwrap privileges passed as a string that can be JSON.parsed into a jwk format object
+nonce - as a string storing a buffer base64url
+```
+}
+> 
+> Decrypts a message given the transport version of keys.
+> 
+> **Returns**: The clear string or false if it cannot be decrypted
+
+**Use case:**
+
+```
+async function afoo() {
+	//
+	let [remote_public, nonce] = await get_jwk_derivation_key_from_partner()
+	// nonce is aes initialization vector
+	// later
+	let message = await recieve_encrypted_message()
+	let priv_key = await fetch_my_private_key()
+	let clear_text = await derived_decipher_message_jwk(message, remote_public,priv_key,nonce)
+		...
+}
+```
+
+
+
+[**contents**](#method-list)
+
+------------------------------------------------------------------------
+
 <a name="gen_public_key" > </a>
 
+* **gen\_public\_key**
 
+>  **Parameters** {
+> 
 ```
-
-/*
-// gen_public_key
-// Parameters:
-//            -- info - an info object (javascript object) which gain fields info.public_key and info.signer_public_key
-//                      optionally provides a field info.biometric, which will be signed and signature will be put into this field
-//            -- store_info - a method taking two parameters (info,privates)  privates is the Object created in this method
-// 
-*/
+info - an info object (javascript object) for carrying public information and which will gain fields info.public_key and info.signer_public_key
+store_info - a two parameter function that can be used to store the augmented info object and the private key counterpart (info,privates)
 ```
+}
+> 
+> This method calls `galactic_user_starter_keys` in order to get three key pairs. It puts the public keys into the info object and then creates another object containing the private keys. If the info object has a field, **biometric**, this field is assumed to contain biometric binary data represented in some string fromat. The **biometric** will be overwritten with its hash from `protect_hash` defined previously. Once the objects are set with their fields, the method `store_info` is called. 
+> 
+> **Returns**: void
 
 
 [**contents**](#method-list)
@@ -990,7 +1066,7 @@ The package.json file has a module and an main field for the two flavors of pack
 
 ### > typescript
 
-A typescript interface has been generated
+A typescript interface has been generated (coming soon)
 
 
 ### > package directories
