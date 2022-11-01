@@ -1,0 +1,38 @@
+export function gen_nonce(input_bits: any): string;
+export function gen_cipher_key(): Promise<any>;
+export function keypair_promise(): any;
+export function axiom_keypair_promise(): any;
+export function wrapper_keypair_promise(): any;
+export function aes_encryptor(encodable: any, aes_key: any, nonce: any): Promise<any>;
+export function aes_decipher_message(message: any, aes_key: any, nonce: any): Promise<string>;
+export function galactic_user_starter_keys(selector: any): Promise<{
+    pk_str: boolean;
+    priv_key: boolean;
+    signer_pk_str: boolean;
+    signer_priv_key: boolean;
+    axiom_pk_str: boolean;
+    axiom_priv_key: boolean;
+}>;
+export function protect_hash(priv_keys: any, aes_key: any, nonce: any, string_to_be_signed: any): Promise<string | false>;
+export function verify_protected(string_that_was_signed: any, encrypted_sig: any, pub_keys: any, aes_key: any, nonce: any): Promise<any>;
+export function unwrapped_aes_key(wrapped_aes: any, unwrapper_key: any): Promise<any>;
+export function derive_aes_key(remote_pub_key_buffer: any, local_private: any): Promise<any>;
+export function key_wrapper(key_to_wrap: any, pub_wrapper_key: any): Promise<string | false>;
+export function key_unwrapper(wrapped_key: any, piv_wrapper_key: any): Promise<any>;
+export function derive_key(sender_public_key: any, piv_axiom_key: any): Promise<any>;
+export function aes_to_str(aes_key: any, transport_type: any): Promise<string>;
+export function ecdh_to_str(ecdh_key: any, transport_type: any): Promise<string>;
+export function importAESKey(rawKey: any, transport_type: any): any;
+export function importECDHKey(axiomKey: any, transport_type: any): any;
+export function aes_from_str(aes_key_str: any, transport_type: any): Promise<any>;
+export function key_signer(data_to_sign: any, priv_signer_key: any): Promise<string | false>;
+export function verifier(was_signed_data: any, signature: any, signer_pub_key: any): Promise<any>;
+export function encipher_message(message: any, aes_key: any, nonce: any, no_string: any): Promise<string | false | Uint8Array>;
+export function derived_encipher_message(message: any, remote_public_ky: any, local_private_ky: any, nonce: any): Promise<string | false>;
+export function decipher_message(message: any, wrapped_key: any, priv_key: any, nonce: any): Promise<string | false>;
+export function derived_decipher_message(message: any, remote_public: any, priv_key: any, nonce: any): Promise<string | false>;
+export function derive_key_jwk(sender_public_key: any, piv_axiom_key: any): Promise<any>;
+export function derived_decipher_message_jwk(message: any, remote_public: any, priv_key: any, nonce: any): Promise<string | false>;
+export function gen_public_key(info: any, store_info: any): Promise<void>;
+export function windowize_crypto_wraps(): void;
+//# sourceMappingURL=crypto-wraps.d.ts.map
