@@ -246,8 +246,8 @@ async function afoo(cipher_buffer, aes_key, nonce) {
 <a name="galactic_user_starter_keys" > </a>
 <a name="asymmetric_starter_keys" > </a>
 
-* **asymetric\_user\_starter\_keys**
-* **galactic\_user\_starter\_keys (synonym)**
+* **asymmetric\_user\_starter\_keys**
+* **galactic\_user\_starter\_keys (= synonym)**
 
 >  **Parameters** { selector : string } 
 > 

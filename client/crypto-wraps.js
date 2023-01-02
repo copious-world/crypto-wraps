@@ -179,7 +179,7 @@ export async function aes_decipher_message(message,aes_key,nonce) {
 
 // 
 
-
+//$>>	asymmetric_starter_keys
 //$>>	galactic_user_starter_keys
 /*
 // galactic_user_starter_keys
@@ -956,6 +956,7 @@ export function windowize_crypto_wraps() {
 	window.wrapper_keypair_promise = wrapper_keypair_promise
 	window.aes_encryptor = aes_encryptor
 	window.aes_decipher_message = aes_decipher_message
+	window.asymmetric_starter_keys = galactic_user_starter_keys
 	window.galactic_user_starter_keys = galactic_user_starter_keys
 	window.protect_hash = protect_hash
 	window.verify_protected = verify_protected
