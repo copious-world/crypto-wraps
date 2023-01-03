@@ -13,6 +13,14 @@ export function galactic_user_starter_keys(selector: any): Promise<{
     axiom_pk_str: boolean;
     axiom_priv_key: boolean;
 }>;
+export function asymmetric_starter_keys(selector: any): Promise<{
+    pk_str: boolean;
+    priv_key: boolean;
+    signer_pk_str: boolean;
+    signer_priv_key: boolean;
+    axiom_pk_str: boolean;
+    axiom_priv_key: boolean;
+}>;
 export function protect_hash(priv_keys: any, aes_key: any, nonce: any, string_to_be_signed: any): Promise<string | false>;
 export function verify_protected(string_that_was_signed: any, encrypted_sig: any, pub_keys: any, aes_key: any, nonce: any): Promise<any>;
 export function unwrapped_aes_key(wrapped_aes: any, unwrapper_key: any): Promise<any>;

@@ -278,6 +278,10 @@ export async function galactic_user_starter_keys(selector) {
 }
 
 
+export async function asymmetric_starter_keys(selector) {
+	return await galactic_user_starter_keys(selector)
+}
+
 
 
 //$>>	protect_hash
@@ -956,7 +960,7 @@ export function windowize_crypto_wraps() {
 	window.wrapper_keypair_promise = wrapper_keypair_promise
 	window.aes_encryptor = aes_encryptor
 	window.aes_decipher_message = aes_decipher_message
-	window.asymmetric_starter_keys = galactic_user_starter_keys
+	window.asymmetric_starter_keys = asymmetric_starter_keys
 	window.galactic_user_starter_keys = galactic_user_starter_keys
 	window.protect_hash = protect_hash
 	window.verify_protected = verify_protected

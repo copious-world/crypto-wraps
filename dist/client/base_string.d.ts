@@ -39,5 +39,9 @@ export function string_from_buffer(bytes: number[] | Uint8Array): string;
  * @returns {Uint8Array} - hex string
  */
 export function buffer_from_cvs_array(number_els: string): Uint8Array;
+/**
+ * @param {string}  number_els - base64 encoded string of comma delimited numbers
+ * @returns {Uint8Array} - hex string
+ */
 export function buffer_from_b64_csv(b64_number_els: any): Uint8Array;
 //# sourceMappingURL=base_string.d.ts.map
