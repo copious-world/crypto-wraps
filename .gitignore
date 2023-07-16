@@ -1,5 +1,5 @@
 node_modules
 standards/*.pdf
 BLAKE3/
-v/chacha.h
-v/cref-cha-cha.c
+v/*/chacha.h
+v/*/cref-cha-cha.c
