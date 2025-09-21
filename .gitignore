@@ -3,3 +3,5 @@ standards/*.pdf
 BLAKE3/
 v/*/chacha.h
 v/*/cref-cha-cha.c
+._*
+
